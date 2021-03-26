@@ -2,11 +2,6 @@ package cn.bestzuo.zuoforum.admin.pojo;
 
 import lombok.Data;
 
-/**
- * @author zuoxiang
- * @version 1.0
- * @date 2020/5/6 12:49
- */
 @Data
 public class IpInfo {
 

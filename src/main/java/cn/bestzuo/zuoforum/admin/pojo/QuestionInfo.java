@@ -2,12 +2,7 @@ package cn.bestzuo.zuoforum.admin.pojo;
 
 import lombok.Data;
 
-/**
- * 后台问题信息展示实体类
- * @author zuoxiang
- * @version 1.0
- * @date 2020/5/3 19:55
- */
+
 @Data
 public class QuestionInfo {
     //问题ID
