@@ -1,0 +1,28 @@
+package cn.bestzuo.zuoforum.admin.mapper;
+
+import cn.bestzuo.zuoforum.admin.pojo.LoginInfo;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+/**
+ * 管理员登录Mapper
+ */
+@Component
+public interface AdminLoginMapper {
+
+    /**
+     * 新增一条登录信息
+     * @param ip
+     * @param info
+     * @param time
+     * @return
+     */
+    int insertLoginInfo(String ip,String info,String time);
+
+    /**
+     * 查询最近5次的登录信息
+     * @return
+     */
+    List<LoginInfo> queryAllLoginInfo();
+}
