@@ -45,11 +45,10 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     @Transactional
-    public Comment insertCommentByQuestionId(String username, String comment, Integer questionId) {
-        //1.插入评论表
-        UserInfo userInfo = userInfoMapper.selectUserInfoByName(username);
-        Question question = questionMapper.selectByPrimaryKey(questionId);
+    public Comment insertCommentByQuestionId(UserInfo  userInfo, String comment, Question question) {
 
+        Integer questionId =question.getId();
+        String username =userInfo.getUsername();
         //封装Comment对象
         Comment com = new Comment();
         com.setComment(comment);

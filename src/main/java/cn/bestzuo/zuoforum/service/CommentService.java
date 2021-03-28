@@ -1,6 +1,8 @@
 package cn.bestzuo.zuoforum.service;
 
 import cn.bestzuo.zuoforum.pojo.Comment;
+import cn.bestzuo.zuoforum.pojo.Question;
+import cn.bestzuo.zuoforum.pojo.UserInfo;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ public interface CommentService {
      * @param comment
      * @return
      */
-    Comment insertCommentByQuestionId(String username,String comment,Integer questionId);
+    Comment insertCommentByQuestionId(UserInfo userInfo, String comment, Question question);
 
     /**
      * 根据问题ID查询评论信息

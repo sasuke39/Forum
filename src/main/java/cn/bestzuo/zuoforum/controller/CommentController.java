@@ -76,7 +76,7 @@ public class CommentController {
             return new ForumResult(500, "问题信息不存在", null);
 
         try {
-            Comment com = commentService.insertCommentByQuestionId(username, comment, questionId);
+            Comment com = commentService.insertCommentByQuestionId(userInfo, comment, question);
             return new ForumResult(200, "评论成功", com);
         } catch (Exception e) {
             e.printStackTrace();

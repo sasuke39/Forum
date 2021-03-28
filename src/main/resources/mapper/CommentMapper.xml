@@ -16,6 +16,7 @@
     </select>
 
     <!-- 插入一条评论 -->
+    <!--  开启主键回写 useGeneratedKeys="true"  -->
     <insert id="insertCommentByQuestionId" useGeneratedKeys="true" keyProperty="cId" parameterType="cn.bestzuo.zuoforum.pojo.Comment">
         insert into tb_comment(comment,`time`,avatar,uid,uname,question_id)
         values( #{comment},#{time},#{avatar},#{uid},#{uname},#{questionId} )
