@@ -4,17 +4,23 @@ import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.mapper.*;
 import cn.bestzuo.zuoforum.pojo.*;
 import cn.bestzuo.zuoforum.service.QuestionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 问题管理Service
  */
 @Service
+@Slf4j
 public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
@@ -122,110 +128,62 @@ public class QuestionServiceImpl implements QuestionService {
     public void insertQuestion(Question question) {
         //插入问题，返回主键
         questionMapper.insertSelective(question);
+        log.info("添加问题："+question.toString());
 
         //返回的问题主键ID
         int questionId = question.getId();
 
         //查询数据库中的所有标签信息
-        List<Tags> tagsList = tagMapper.queryAllTags();
-
+        List<Tags> tagsListFormDataBase = tagMapper.queryAllTags();
+        Stream<String> str = tagsListFormDataBase.stream().flatMap(tags -> Stream.of(tags.getTagsName()));
+        List<String> tagsListFDName=str.collect(Collectors.toList());
         //获取问题中对应的标签
-        String s = question.getTag();
+        String[] tagsFromClient =question.getTag().split(",");
+        log.info("添加问题："+question.getId()+"--标签有："+Arrays.toString(tagsFromClient));
 
-        if (s.indexOf(",") > 0) {
-            //存在多个标签，进行拆解
-            String[] tags = s.split(",");
+        Stream<String> stream = Arrays.stream(tagsFromClient);
+        Map<String,Integer> map= stream.filter(tags ->!tagsListFDName.contains(tags)).collect(Collectors.toMap(s -> s, item -> 6));
 
-            //将数据库中所有标签放入容器
-            List<String> tagList = new ArrayList<>();
-            for (Tags t : tagsList) {
-                tagList.add(t.getTagsName());
-            }
 
-            //对每个标签进行分类，如果当前标签库中没有这个标签，将其插入到数据库中
-            Map<String, Integer> map = new LinkedHashMap<>();
-            for (String t : tags) {
-                if (!tagList.contains(t)) {
-                    map.put(t, 6);  //默认放到“其它”类别中，6代表其它类别
-                }
-            }
+        //新增数据库中没有的标签
+        for (Map.Entry<String, Integer> m : map.entrySet()) {
+            //插入标签表
+            Tags res = new Tags();
+            res.setTagsName(m.getKey());
+            res.setCategoryId(m.getValue());
+            res.setIsOriginTag(0);  //设置为非默认标签  0-非默认
+            tagMapper.insertNewTag(res);
 
-            //新增数据库中没有的标签
-            for (Map.Entry<String, Integer> m : map.entrySet()) {
-                //插入标签表
-                Tags res = new Tags();
-                res.setTagsName(m.getKey());
-                res.setCategoryId(m.getValue());
-                res.setIsOriginTag(0);  //设置为非默认标签  0-非默认
-                tagMapper.insertNewTag(res);
+            //插入分类和标签的对应关系
+            // 2020.4.29 分类和标签的关系保持不变
+            tagMapper.insertQuestionAndTag(res.getId(), question.getId());
+        }
 
-               //插入分类和标签的对应关系
-                // 2020.4.29 分类和标签的关系保持不变
-                tagMapper.insertQuestionAndTag(res.getId(), question.getId());
-            }
-
-            //插入问题和标签的关系
-            for (String t : tags) {
-                //查询标签ID
-                QuestionTag questionTag = new QuestionTag();
-                questionTag.setTagId(tagMapper.selectTagIdByTagName(t));
-                questionTag.setQuestionId(questionId);
-                questionTagMapper.insertQuestionTag(questionTag);
-            }
-
-            //新增用户积分
-            UserInfo userInfo = userInfoMapper.selectUserInfoByName(question.getPublisher());
-            UserRate userRate = userRateMapper.selectRateById(userInfo.getUId());
-            if(userRate == null){
-                //新增用户积分信息
-                UserRate rate = new UserRate();
-                rate.setUserId(userInfo.getUId());
-                rate.setRate(3);
-                userRateMapper.insertUserRate(rate);
-            }else{
-                int rate = userRate.getRate();
-                //发一贴加3积分
-                userRateMapper.updateRateById(userInfo.getUId(),rate+3);
-            }
-
-        } else {
-            //只存在一个标签
-            List<String> tagList = new ArrayList<>();
-            for (Tags t : tagsList) {
-                tagList.add(t.getTagsName());
-            }
-            if (!tagList.contains(s)) {
-                Tags res = new Tags();
-                res.setTagsName(s);
-                res.setCategoryId(6);
-                res.setIsOriginTag(0);
-                tagMapper.insertNewTag(res);
-
-                //插入问题和标签的关系
-                tagMapper.insertQuestionAndTag(res.getId(), question.getId());
-            }
-
-            //插入问题和标签对应的关系
+        //插入问题和标签的关系
+        for (String t : tagsFromClient) {
+            //查询标签ID
             QuestionTag questionTag = new QuestionTag();
-            questionTag.setTagId(tagMapper.selectTagIdByTagName(s));
+            questionTag.setTagId(tagMapper.selectTagIdByTagName(t));
             questionTag.setQuestionId(questionId);
             questionTagMapper.insertQuestionTag(questionTag);
-
-            //新增用户积分
-            UserInfo userInfo = userInfoMapper.selectUserInfoByName(question.getPublisher());
-            UserRate userRate = userRateMapper.selectRateById(userInfo.getUId());
-            if(userRate == null){
-                //新增用户积分信息
-                UserRate rate = new UserRate();
-                rate.setUserId(userInfo.getUId());
-                rate.setRate(3);
-                userRateMapper.insertUserRate(rate);
-            }else{
-                int rate = userRate.getRate();
-                //发一贴加3积分
-                userRateMapper.updateRateById(userInfo.getUId(),rate+3);
-            }
         }
+
+        //新增用户积分
+        UserInfo userInfo = userInfoMapper.selectUserInfoByName(question.getPublisher());
+        UserRate userRate = userRateMapper.selectRateById(userInfo.getUId());
+        if(userRate == null){
+            //新增用户积分信息
+            UserRate rate = new UserRate();
+            rate.setUserId(userInfo.getUId());
+            rate.setRate(3);
+            userRateMapper.insertUserRate(rate);
+        }else{
+            int rate = userRate.getRate();
+            //发一贴加3积分
+            userRateMapper.updateRateById(userInfo.getUId(),rate+3);
+        }
+
+
     }
 
     /**
@@ -265,7 +223,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<Integer> tagIds = questionTagMapper.selectTagByQuestionId(questionId);
 
         //查询数据库中所有的tag信息
-        List<Tags> tagsList = tagMapper.queryAllTags();
+        List<Tags> tagsListFormDataBase = tagMapper.queryAllTags();
 
         //表示标签中只能包含汉字、字母和数字
         String regex = "^[a-z0-9A-Z\u4e00-\u9fa5]+$";
@@ -316,7 +274,7 @@ public class QuestionServiceImpl implements QuestionService {
             if(!tag.matches(regex)) return -1;
 
             List<Integer> tagIdsList = new ArrayList<>();
-            for(Tags t : tagsList){
+            for(Tags t : tagsListFormDataBase){
                 tagIdsList.add(t.getId());
             }
 

@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sound.midi.SoundbankResource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -37,5 +38,20 @@ public class QuestionMapperTest {
             result.append(random.nextInt(10));
         }
         return result.toString();
+    }
+    @Test
+    public void test2(){
+        String str ="1,2,3,4";
+        String str1 ="2";
+        String str2 ="1,2";
+
+        String[] split2 = str2.split(",");
+        System.out.println(Arrays.toString(split2));
+
+        String[] split1 = str1.split(",");
+        System.out.println(Arrays.toString(split1));
+
+        String[] split = str.split(",");
+        System.out.println(Arrays.toString(split));
     }
 }
