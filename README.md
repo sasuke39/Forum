@@ -1,6 +1,6 @@
-# 码匠论坛
+# EU论坛
 
-码匠论坛是一个功能基本全面的内部交流使用论坛平台，提供发布问题、个人资料展示、评论、回复、搜索、接收消息通知等基本功能。后端采用了 SpringBoot + MyBatis + MySQL进行构建，前端采用了 Thymeleaf + Layui 进行展示。界面风格简洁，尚未进行深度美化。如有 BUG 请尽快联系作者提交问题，不胜感激！
+EU论坛
 
 ![](https://bestzuo.cn/images/forum/forum.jpg)
 
@@ -22,6 +22,8 @@
 
 - MySQL
 
+- Redis
+
 ## 前端选型
 
 - Thymeleaf
@@ -34,7 +36,7 @@
 
 - 语言：JDK1.8
 
-- IDE：IDEA 2018.3
+- IDE：IDEA 2020.3
 
 - 依赖管理：Maven
 
@@ -42,11 +44,4 @@
 
 - 腾讯云轻量应用服务器 Ubuntu 16.03
 
-## 后期更新计划
 
-- 2019.11.25：拟采用 Redis、WebSocket 等缓解数据库压力，提高论坛的承受能力。
-
-# 关注作者
-
-- 博客：https://bestzuo.cn
-- Java学习笔记：https://study.bestzuo.cn
