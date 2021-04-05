@@ -1,6 +1,7 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
+import cn.bestzuo.zuoforum.config.EasyRedis;
 import cn.bestzuo.zuoforum.mapper.QuestionEditMapper;
 import cn.bestzuo.zuoforum.mapper.UserInfoMapper;
 import cn.bestzuo.zuoforum.mapper.UserRateMapper;
@@ -10,12 +11,14 @@ import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.pojo.UserRate;
 import cn.bestzuo.zuoforum.pojo.vo.QuestionVO;
 import cn.bestzuo.zuoforum.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ import java.util.List;
  * 问题跳转Controller
  */
 @Controller
+@Slf4j
 public class PostController {
 
     @Autowired
@@ -43,6 +47,8 @@ public class PostController {
 
     @Autowired
     private QuestionEditService questionEditService;
+    @Resource
+    private EasyRedis easyRedis;
 
     /**
      * 点击进入问题详情
@@ -69,15 +75,27 @@ public class PostController {
 //    }
     @RequestMapping("/question/{id}")
     public String getPost(@PathVariable("id") Integer id, Model model) {
-        Question question = questionService.selectByPrimaryKey(id);
-        if (question != null) {
-            questionService.updateByPrimaryKeySelective(question);
-            QuestionVO res = convertToQuestionVO(question);
-
-            model.addAttribute("question", res);
+        String redisKey ="question-id"+id;
+        if(easyRedis.hasKey(redisKey)){
+            Object keyObject = easyRedis.get(redisKey);
+            log.info("从Redis中获取key："+redisKey+"-----value:"+keyObject.toString());
+            model.addAttribute("question",keyObject);
             return "post/post";
+        }else {
+            Question question = questionService.selectByPrimaryKey(id);
+            if (question != null) {
+                questionService.updateByPrimaryKeySelective(question);
+                QuestionVO res = convertToQuestionVO(question);
+                easyRedis.set(redisKey,res,60*30);
+                log.info("从Redis中添加key："+redisKey+"-----value:"+res.toString()+"有效时间为：3600");
+                model.addAttribute("question", res);
+                return "post/post";
+            }
+            return "redirect:/";
         }
-        return "redirect:/";
+
+
+
     }
 
     /**

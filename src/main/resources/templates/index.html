@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-    <title>码匠论坛</title>
+    <title>RE论坛</title>
     <link rel="shortcut icon" href="/favicon.ico"/>
     <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/common/custom.css}" media="all"/>
@@ -28,11 +28,7 @@
             <!-- 轮播图 -->
             <div class="swiper-container">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/forum-gonggao.png"></div>
-                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/forum1.png"></div>
-                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/forum2.png"></div>
-                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/issue.png"></div>
-                    <div class="swiper-slide"><img src="https://bestzuo.cn/images/forum/mjforum-index.png"></div>
+                    <div class="swiper-slide"><img src="../static/blogsphoto.png"></div>
                 </div>
                 <!-- 分页器 -->
                 <div class="swiper-pagination"></div>
@@ -67,17 +63,17 @@
                 <div class="index-title-body">
                     <div>
                         <div>
-                            <a data-fancybox="gallery" href="https://bestzuo.cn/images/forum/gongzhonghao.png">
+                            <a data-fancybox="gallery" href="../static/wechatER.JPG">
                                 <img style="display: inline;margin-left: 20px" width="135" height="135"
-                                 src="https://bestzuo.cn/images/forum/gongzhonghao.png"/>
+                                 src="../static/wechatER.JPG"/>
                             </a>
-                            <a data-fancybox="gallery" href="https://bestzuo.cn/images/forum/forum-blog.png">
+                            <a data-fancybox="gallery" href="../static/blogsphoto.png" id="toMyBlog">
                             <img style="display: inline;margin-left: 50px" width="150" height="150"
-                                 src="https://bestzuo.cn/images/forum/forum-blog.png"/>
+                                 src="../static/blogsphoto.png"/>
                             </a>
                         </div>
                         <div>
-                            <span id="wechat">微信公众号</span>
+                            <span id="wechat">个人微信号</span>
                             <span id="author">作者博客</span>
                         </div>
                     </div>
@@ -149,15 +145,9 @@
             </div>
             <!--页脚-->
             <div>
-                <div style="font-size: 15px;text-align: center;margin-bottom: 10px">© 2020 Sanarous · 版本所有 -
-                    鄂ICP备19008535号
+                <div style="font-size: 15px;text-align: center;margin-bottom: 10px">© 2021 zxh ·
                 </div>
                 <div style="color: #999;font-size: 14px;text-align: center;">感谢以下平台给本站提供技术支持</div>
-                <div style="text-align: center">
-                    <img style="margin-top: 5px;margin-right: 20px;"
-                         src="https://bestzuo.cn/images/forum/tencentyun.svg" width="100" height="50">
-                    <img src="https://bestzuo.cn/images/forum/spring.svg" width="100" height="50">
-                </div>
             </div>
         </div>
         <!-- 右侧 -->
@@ -281,8 +271,12 @@
 
     });
 
-    //页面加载完成就开始
+    //页面加载完成就开="layui-col-md始
     $(document).ready(function () {
+        //博客图片点击事件
+        $('#toMyBlog').click(function(){
+           window.location.href="https://www.cnblogs.com/yitaqiotouto";
+        });
         //导航栏停留在首页
         $("#index").addClass("layui-this");
 
@@ -438,6 +432,8 @@
             }
         });
     }
+
+
 </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>用户注册 - 码匠论坛</title>
+    <title>用户注册 - EU论坛</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
     <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/static/css/register.css}" media="all">
@@ -184,10 +184,10 @@
         });
 
         //聚焦时
-        // $("#username").focus(function () {
-        //     $("#input-username").parent().children("i").hide();
-        //     $("input[name=username]").css({"box-shadow": "none"});
-        // });
+        $("#username").focus(function () {
+            $("#input-username").parent().children("i").hide();
+            $("input[name=username]").css({"box-shadow": "none"});
+        });
 
         //验证密码
         $("#password").blur(function () {
