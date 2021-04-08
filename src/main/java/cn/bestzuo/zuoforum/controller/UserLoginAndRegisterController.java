@@ -246,7 +246,6 @@ public class UserLoginAndRegisterController {
     @ResponseBody
     public ForumResult loginUserByToken(@RequestParam("token") String token,HttpServletRequest request){
         ForumResult forumResult =new ForumResult();
-        System.out.println(token);
         log.info("来自客户端的token:"+token);
         String  tokenOnSession = (String) request.getSession().getAttribute("token");
         log.info("服务端与用户对应的token:"+tokenOnSession);
