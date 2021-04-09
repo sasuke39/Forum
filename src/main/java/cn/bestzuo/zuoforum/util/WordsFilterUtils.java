@@ -1,17 +1,18 @@
 package cn.bestzuo.zuoforum.util;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WordsFilterUtils {
     public static String Html2Text(String inputString) {
         String htmlStr = inputString; //含html标签的字符串
         String textStr ="";
-        java.util.regex.Pattern p_script;
-        java.util.regex.Matcher m_script;
-        java.util.regex.Pattern p_style;
-        java.util.regex.Matcher m_style;
-        java.util.regex.Pattern p_html;
-        java.util.regex.Matcher m_html;
+        Pattern p_script;
+        Matcher m_script;
+        Pattern p_style;
+        Matcher m_style;
+        Pattern p_html;
+        Matcher m_html;
 
         try {
             String regEx_script = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>"; //定义script的正则表达式{或<script[^>]*?>[\\s\\S]*?<\\/script> }
