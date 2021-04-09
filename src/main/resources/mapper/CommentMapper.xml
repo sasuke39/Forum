@@ -3,6 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.bestzuo.zuoforum.mapper.CommentMapper">
+    <delete id="deleteCommentByQuestionId" parameterType="int">
+        delete from tb_comment where question_id=#{questionId}
+    </delete>
     <!-- 根据问题ID查询问题下所有的评论（没有回复） -->
     <select id="queryCommentByQuestionId" parameterType="int" resultType="cn.bestzuo.zuoforum.pojo.Comment">
         select * from tb_comment where question_id = #{questionId}

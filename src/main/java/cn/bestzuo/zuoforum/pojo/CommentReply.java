@@ -34,4 +34,6 @@ public class CommentReply {
 
     //用户名
     private String rName;
+
+    private Integer questionId;
 }

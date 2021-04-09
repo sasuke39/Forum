@@ -1,5 +1,6 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.config.EasyRedis;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.User;
 import cn.bestzuo.zuoforum.service.QuestionService;
@@ -8,6 +9,7 @@ import cn.bestzuo.zuoforum.service.QuestionTagService;
 import cn.bestzuo.zuoforum.service.TagService;
 import cn.bestzuo.zuoforum.service.UserService;
 import cn.bestzuo.zuoforum.util.CommonUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ import java.util.*;
  * 发布问题Controller
  */
 @Controller
+@Slf4j
 public class PulishController {
 
     @Autowired
@@ -34,6 +37,8 @@ public class PulishController {
 
     @Autowired
     private QuestionTagService questionTagService;
+    @Autowired
+    private EasyRedis easyRedis;
 
     @GetMapping("/publish")
     public String index() {
@@ -165,24 +170,37 @@ public class PulishController {
      * @param userId  用户ID
      * @return  通用包装结果
      */
-    @DeleteMapping("/deleteQuestion")
+    @PostMapping("/deleteQuestion")
     @ResponseBody
     public ForumResult deleteQuestion(@RequestParam("questionId") Integer questionId,
-                                      @RequestParam("userId") Integer userId) {
+                                      @RequestParam("userId") Integer  userId) {
 
         //校验操作用户ID和问题ID是否存在
+        ForumResult forumResult = new ForumResult();
+        forumResult.setStatus(200);
         User user = userService.getUserByUserId(userId);
         Question question = questionService.selectByPrimaryKey(questionId);
-        if (user == null || question == null)
-            return new ForumResult(400, "信息不存在", null);
+        if (user == null || question == null) {
+            forumResult = new ForumResult(400, "信息不存在", null);
+        return forumResult;
+        }
 
         //校验问题发布者与操作用户是否为同一人
         if (!question.getPublisher().equals(user.getUsername())) {
-            return new ForumResult(400, "非法操作", null);
+            forumResult=new  ForumResult(400, "非法操作", null);
         }
-
         //执行删除操作
-        return questionService.deleteQuestion(questionId, userId);
+        try{
+            questionService.deleteQuestion(questionId, userId);
+            String key = "question-id" + questionId;
+            if (easyRedis.hasKey(key)) {
+                easyRedis.delete(key);
+            }
+        }catch (Exception e){
+            forumResult= new ForumResult(400,e.getMessage(),null);
+            log.info(e.getMessage());
+        }
+        return forumResult;
     }
 
 }

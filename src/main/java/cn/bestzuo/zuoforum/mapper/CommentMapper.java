@@ -44,4 +44,6 @@ public interface CommentMapper {
      * @return
      */
     int selectOneUserCommentOnOneQuestionCount(Integer uid,Integer questionId);
+
+    void deleteCommentByQuestionId(Integer questionId);
 }

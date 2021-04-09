@@ -73,7 +73,7 @@ public interface QuestionService {
      * @param userId
      * @return
      */
-    ForumResult deleteQuestion(Integer questionId,Integer userId);
+    void deleteQuestion(Integer questionId,Integer userId) throws Exception;
 
     /**
      * 根据浏览量查询文章信息

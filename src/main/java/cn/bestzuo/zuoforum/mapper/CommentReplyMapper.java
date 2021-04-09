@@ -29,4 +29,6 @@ public interface CommentReplyMapper {
      * @return
      */
     int queryReplyNum(Integer parentCommentId);
+
+    void deleteReplyCommentByQuestionId(Integer questionId);
 }

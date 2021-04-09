@@ -179,6 +179,7 @@
 <script th:inline="javascript">
     let layedit, edit;
     let question = [[${question}]];
+    let questionId =question.id;
 
     let localToken =localStorage.getItem("token");
     // let loginUserInfo = [[${session.loginUserInfo}]];
@@ -349,9 +350,31 @@
         //删除操作
         $("#delete").click(function (){
             layer.confirm('确定删除该问题？', {icon: 3, title:'提示'}, function(index){
-                layer.msg("暂不支持该操作，程序猿小哥哥正在紧急开发中哦~");
-                layer.close(index);
+            	    $.ajax({
+                	url: '/deleteQuestion',
+                	type: 'post',
+                	data: {questionId:questionId,
+                		 userId:loginUserInfo.uid
+                		},
+               		success:function(res)
+               		{
+                	if (res.status===200) {
+                		layer.alert("问题删除成功!", {icon: 6, time: 2000});
+                		layer.close(index);
+                		window.location.href="/";
+                	}else if(res.status===400){
+                		layer.alert(res.msg, {icon: 2, time: 2000});
+                	}else{
+                        layer.alert("系统错误，请稍后再试!", {icon: 3, time: 2000});
+                        }
+                    }
+                    });
+
+                 
+            
             });
+   
+         
         });
 
         let username = null;

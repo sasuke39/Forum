@@ -54,6 +54,7 @@ public class CommentReplyServiceImpl implements CommentReplyService {
         commentReply.setTouname(replyfor); //目标回复的用户名
         commentReply.setTouid(userInfo1.getUId());  //目标回复的用户Id
         commentReply.setParentCommentId(parentCommentId); //父评论ID
+        commentReply.setQuestionId(qId);
 
         //时间
         Date date = new Date();

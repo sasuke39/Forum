@@ -40,6 +40,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private CommentMapper commentMapper;
+    @Autowired
+    private CommentReplyMapper commentReplyMapper;
 
 
     /**
@@ -348,9 +352,16 @@ public class QuestionServiceImpl implements QuestionService {
      * @return 通用结果
      */
     @Override
-    public ForumResult deleteQuestion(Integer questionId, Integer userId) {
-        //TODO
-        return null;
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteQuestion(Integer questionId, Integer userId) throws Exception {
+        if (questionId==null||userId==null){
+            throw new Exception("问题或用户id为空");
+        }
+        log.info("删除问题操作---删除问题id:"+questionId+"操作者id:"+userId);
+
+        commentReplyMapper.deleteReplyCommentByQuestionId(questionId);
+        commentMapper.deleteCommentByQuestionId(questionId);
+        questionMapper.deleteByPrimaryKey(questionId);
     }
 
     /**
