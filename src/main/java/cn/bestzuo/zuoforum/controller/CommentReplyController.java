@@ -1,15 +1,13 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
-import cn.bestzuo.zuoforum.common.LayuiFlowResult;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.CommentReply;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.service.CommentReplyService;
 import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,9 +60,19 @@ public class CommentReplyController {
         if (replyfor == null)
             return new ForumResult(400, "回复对象不能为空", null);
 
-        //后端查询数据校验
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);  //当前回复用户
-        UserInfo userInfo1 = userInfoService.getUserInfoByName(replyfor);  //目标回复用户
+
+
+        //点赞者
+        UserInfo userInfo = null;
+        //被点赞者
+        UserInfo userInfo1 =null;
+        try {
+            //后端查询数据校验
+             userInfo = userInfoService.getUserInfoByName(username);  //当前回复用户
+             userInfo1 = userInfoService.getUserInfoByName(replyfor);  //目标回复用户
+        }catch (BusinessException businessException){
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+        }
         if (userInfo == null || userInfo1 == null)
             return new ForumResult(500, "用户信息查询失败", null);
 

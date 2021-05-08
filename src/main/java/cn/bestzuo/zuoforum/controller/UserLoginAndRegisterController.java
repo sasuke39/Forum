@@ -12,10 +12,9 @@ import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.service.UserTokenService;
 import cn.bestzuo.zuoforum.util.HS256;
 import cn.bestzuo.zuoforum.util.MD5Password;
+import cn.bestzuo.zuoforum.util.MyMD5;
 import cn.bestzuo.zuoforum.util.VerifyCode;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
@@ -29,10 +28,6 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static java.awt.SystemColor.info;
 
 /**
  * 用户登录注册Controller
@@ -198,7 +193,7 @@ public class UserLoginAndRegisterController {
         }
 
         //后端校验密码
-        if (!MD5Password.verify(password, user.getPassword())) {
+        if (!userService.getUserByUserId(user.getUid()).getPassword().equals(MyMD5.string2Md5(password))) {
             return new ForumResult(500, "密码错误", null);
         }
         String token ;

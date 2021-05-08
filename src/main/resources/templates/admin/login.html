@@ -13,8 +13,7 @@
 <div id="login-box">
     <div class="site-logo">
         <div class="layui-form-item">
-            <a href="/"><img src="https://bestzuo.cn/images/forum/mjforum-logo.png"
-                             style="width: 35%;margin: 10px 0 0 20px"></a>
+            <a href="/"></a>
         </div>
     </div>
     <div class="login-header">
@@ -91,7 +90,7 @@
 <script>
     //验证码刷新
     function changeCode() {
-        let src = "http://localhost:8888/getVerifyCode?" + new Date().getTime();
+        let src = "http://localhost:8081/getVerifyCode?" + new Date().getTime();
         $('.verifyCode').attr("src", src);
     }
     changeCode();

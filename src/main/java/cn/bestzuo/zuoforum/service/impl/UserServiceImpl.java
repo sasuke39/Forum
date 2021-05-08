@@ -10,6 +10,7 @@ import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.pojo.UserRate;
 import cn.bestzuo.zuoforum.service.UserService;
 import cn.bestzuo.zuoforum.util.MD5Password;
+import cn.bestzuo.zuoforum.util.MyMD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,14 +63,14 @@ public class UserServiceImpl implements UserService {
         //插入 用户名-密码 数据库中 密码加密
         User user = new User();
         user.setUsername(username);
-        user.setPassword(md5Password(password));
+        user.setPassword(MyMD5.string2Md5(password));
         userMapper.insertUser(user);
 
         //插入用户信息表中
         UserInfo userInfo = new UserInfo();
         userInfo.setUId(user.getUid());
         userInfo.setUsername(username);
-        userInfo.setAvatar("https://bestzuo.cn/images/forum/anonymous.jpg");  //默认头像的地址
+        userInfo.setAvatar("https://img2.baidu.com/it/u=2561659095,299912888&fm=26&fmt=auto&gp=0.jpg");  //默认头像的地址
         userInfo.setRegisterDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         userInfoMapper.insertSelective(userInfo);
 

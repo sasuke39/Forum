@@ -5,7 +5,6 @@ import cn.bestzuo.zuoforum.common.LayEditUploadImageResult;
 import cn.bestzuo.zuoforum.common.WangEditorResult;
 import cn.bestzuo.zuoforum.pojo.UploadImage;
 import cn.bestzuo.zuoforum.service.UserInfoService;
-import cn.bestzuo.zuoforum.util.QiniuUtils;
 import cn.bestzuo.zuoforum.util.TencentCOS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -46,4 +46,6 @@ public interface QuestionTagMapper {
      * @return
      */
     List<Integer> selectQuestionIdByTagId(Integer tagId);
+
+    void deleteBYQID(Integer questionId);
 }

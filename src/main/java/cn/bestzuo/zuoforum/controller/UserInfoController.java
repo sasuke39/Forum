@@ -1,8 +1,9 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
-import cn.bestzuo.zuoforum.service.UserInfoService;
 import cn.bestzuo.zuoforum.common.ForumResult;
+import cn.bestzuo.zuoforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,7 +49,12 @@ public class UserInfoController {
     @GetMapping("/getavatar")
     @ResponseBody
     public ForumResult getUserAvatar(String username) {
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);
+        UserInfo userInfo = null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+        }
 
         return userInfo == null ? new ForumResult(400,"",null) : new ForumResult(200,"",userInfo.getAvatar());
     }
@@ -62,7 +68,12 @@ public class UserInfoController {
     @GetMapping("/getUserInfo")
     @ResponseBody
     public ForumResult getUserInfo(@RequestParam("username") String username, Model model) {
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);
+        UserInfo userInfo = null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+        }
         if (userInfo == null) {
             return new ForumResult(500, "用户不存在", null);
         }

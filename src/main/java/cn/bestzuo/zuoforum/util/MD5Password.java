@@ -13,7 +13,9 @@ public class MD5Password {
     public static String md5Password(String password){
         Random r = new Random();
         StringBuilder sb = new StringBuilder(16);
-        sb.append(r.nextInt(99999999)).append(r.nextInt(99999999));
+        sb.append(r.nextInt(
+
+        )).append(r.nextInt(99999999));
         int len = sb.length();
         if (len < 16) {
             for (int i = 0; i < 16 - len; i++) {
@@ -75,4 +77,7 @@ public class MD5Password {
         String salt = new String(cs2);
         return Objects.equals(md5Hex(password + salt), new String(cs1));
     }
+
+
+
 }

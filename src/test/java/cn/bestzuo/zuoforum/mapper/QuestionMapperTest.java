@@ -1,5 +1,6 @@
 package cn.bestzuo.zuoforum.mapper;
 
+import cn.bestzuo.zuoforum.admin.pojo.QuestionInfo;
 import cn.bestzuo.zuoforum.pojo.Question;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,5 +54,17 @@ public class QuestionMapperTest {
 
         String[] split = str.split(",");
         System.out.println(Arrays.toString(split));
+    }
+    @Test
+    public  void testNewInstance(){
+        QuestionInfo testBean =new QuestionInfo();
+        Class<? extends QuestionInfo> testBeanClass = testBean.getClass();
+        try {
+            QuestionInfo testBean1 = testBeanClass.newInstance();
+            System.out.println(testBean1);
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
     }
 }

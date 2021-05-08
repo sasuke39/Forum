@@ -2,6 +2,7 @@ package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.config.EasyRedis;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.mapper.QuestionEditMapper;
 import cn.bestzuo.zuoforum.mapper.UserInfoMapper;
 import cn.bestzuo.zuoforum.mapper.UserRateMapper;
@@ -118,7 +119,12 @@ public class PostController {
         vo.setGmtCreate(question.getGmtCreate());
         vo.setGmtModified(question.getGmtModified());
 
-        UserInfo info = userInfoService.getUserInfoByName(question.getPublisher());
+        UserInfo info = null;
+        try {
+            info = userInfoService.getUserInfoByName(question.getPublisher());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         vo.setUid(info.getUId());
         if(info.getComment() == null || info.getComment() == "" || info.getComment().length() == 0){
             vo.setUserInfo("Ta还没有自我介绍哦");
@@ -155,7 +161,12 @@ public class PostController {
         }
 
         //判断用户积分等级
-        UserRate userRate = userRateService.selectRateById(userInfoService.getUserInfoByName(question.getPublisher()).getUId());
+        UserRate userRate = null;
+        try {
+            userRate = userRateService.selectRateById(userInfoService.getUserInfoByName(question.getPublisher()).getUId());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         if(userRate == null){
             vo.setRate("暂无");
             vo.setRateScore(0);

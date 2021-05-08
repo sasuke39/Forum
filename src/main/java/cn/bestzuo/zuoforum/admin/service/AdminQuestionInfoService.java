@@ -5,8 +5,6 @@ import cn.bestzuo.zuoforum.admin.pojo.QuestionReportVO;
 import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.mapper.*;
 import cn.bestzuo.zuoforum.pojo.*;
-import cn.bestzuo.zuoforum.service.QuestionService;
-import cn.bestzuo.zuoforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

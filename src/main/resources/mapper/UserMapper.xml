@@ -7,12 +7,18 @@
     <update id="updatePassword">
         update tb_user set password = #{newPassword} where username = #{username}
     </update>
+    <update id="updateUsername">
+        update tb_user set username = #{username} where uid = #{uid}
+    </update>
     <!--根据用户ID删除用户信息-->
     <delete id="deleteUserById">
         delete from tb_user where uid = #{id}
     </delete>
     <select id="getAllUsers" resultType="cn.bestzuo.zuoforum.pojo.User">
         select * from tb_user
+    </select>
+    <select id="getPassword" resultType="cn.bestzuo.zuoforum.pojo.User">
+        select password from tb_user where uid=#{id}
     </select>
     <!-- 插入一条用户信息，并返回主键信息 -->
     <insert id="insertUser" parameterType="cn.bestzuo.zuoforum.pojo.User" useGeneratedKeys="true" keyProperty="uid">

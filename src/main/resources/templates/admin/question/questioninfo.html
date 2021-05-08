@@ -2,7 +2,7 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>EU论坛后台管理系统</title>
+    <title>RE论坛后台管理系统</title>
     <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}" media="all"/>
     <link rel="stylesheet" th:href="@{/static/fontawesome/css/fontawesome.min.css}" media="all"/>
     <script th:src="@{/static/common/jquery.min.js}"></script>
@@ -97,14 +97,14 @@
                 });
 
             } else if (obj.event === 'del') {
-                layer.confirm('确定删除用户' + data.username + '吗？', function (index) {
+                layer.confirm('确定问题<' + data.title + '>吗？', function (index) {
                     obj.del();
                     //触发单个删除请求
                     $.ajax({
                         type: "get",
-                        url: "/deleteUser",
+                        url: "/deleteQuestionByQId",
                         data: {
-                            uid: data.id
+                            questionId: data.id
                         },
                         async: false,
                         success: function (res) {

@@ -1,13 +1,15 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
+
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.pojo.vo.QuestionVO;
-import cn.bestzuo.zuoforum.pojo.vo.UserIndexQuestionVO;
 import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.QuestionTagService;
 import cn.bestzuo.zuoforum.service.TagService;
+
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -16,7 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class TagController {
     private UserInfoService userInfoService;
 
 
+
     /**
      * 根据标签名获取该标签对应的所有问题信息
      * @param tagName
@@ -64,10 +66,15 @@ public class TagController {
         //根据tagId查询对应的所有问题信息，并包装成questionVO转发到前端
         List<Integer> quesIdList = questionTagService.selectQuestionIdByTagId(tagId);
         List<QuestionVO> res = new ArrayList<>();
-        for(Integer i : quesIdList){
-            Question question = questionService.selectByPrimaryKey(i);
-            res.add(convertQuestionToVO(question));
+        try {
+            for(Integer i : quesIdList){
+                Question question = questionService.selectByPrimaryKey(i);
+                res.add(convertQuestionToVO(question));
+            }
+        }catch (BusinessException businessException){
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
         }
+
 
         PageInfo<QuestionVO> pageInfo = new PageInfo<>(res);
         if(res.size() == 0){
@@ -99,10 +106,11 @@ public class TagController {
      * @param question 表单数据
      * @return
      */
-    private QuestionVO convertQuestionToVO(Question question) {
+    private QuestionVO convertQuestionToVO(Question question) throws BusinessException {
         QuestionVO vo = new QuestionVO();
-
-        vo.setId(question.getId());
+        if(question.getId()!=null) {
+            vo.setId(question.getId());
+        }
         vo.setTitle(question.getTitle());
         vo.setDescription(question.getDescription());
 

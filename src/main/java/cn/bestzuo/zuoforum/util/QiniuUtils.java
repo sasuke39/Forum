@@ -17,9 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 
 /**
- * @author zuoxiang
- * @version 1.0
- * @date 2020/5/7 15:37
  */
 @Component
 public class QiniuUtils {

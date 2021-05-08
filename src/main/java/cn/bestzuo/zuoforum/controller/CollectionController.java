@@ -1,6 +1,7 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.Collection;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
@@ -49,7 +50,12 @@ public class CollectionController {
         if (StringUtils.isEmpty(username) || questionId == null) return new ForumResult(400, "内容不合法", null);
         
         //后端校验用户名信息
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);
+        UserInfo userInfo = null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(), businessException.getErrorMsg(), null);
+        }
         if (userInfo == null) return new ForumResult(400, "用户不存在", null);
         Integer status = collectionService.selectCollectionStatus(username, questionId);
         return (status == null || status == 0) ? new ForumResult(200, "查询成功", 0) : new ForumResult(200, "查询成功", 1);
@@ -73,7 +79,12 @@ public class CollectionController {
         }
 
         //后端校验用户名信息
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);
+        UserInfo userInfo =null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(), businessException.getErrorMsg(), null);
+        }
         if (userInfo == null)
             return new ForumResult(400, "用户不存在", null);
 

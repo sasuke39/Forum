@@ -75,6 +75,8 @@ public interface QuestionService {
      */
     void deleteQuestion(Integer questionId,Integer userId) throws Exception;
 
+    void deleteQuestionByUId(Integer userId) throws Exception;
+
     /**
      * 根据浏览量查询文章信息
      * @return

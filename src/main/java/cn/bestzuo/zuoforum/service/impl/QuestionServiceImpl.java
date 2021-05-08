@@ -1,6 +1,7 @@
 package cn.bestzuo.zuoforum.service.impl;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
+import cn.bestzuo.zuoforum.config.EasyRedis;
 import cn.bestzuo.zuoforum.mapper.*;
 import cn.bestzuo.zuoforum.pojo.*;
 import cn.bestzuo.zuoforum.service.QuestionService;
@@ -45,6 +46,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private CommentReplyMapper commentReplyMapper;
 
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+   private EasyRedis easyRedis;
 
     /**
      * 查询所有问题信息
@@ -362,7 +368,24 @@ public class QuestionServiceImpl implements QuestionService {
         commentReplyMapper.deleteReplyCommentByQuestionId(questionId);
         commentMapper.deleteCommentByQuestionId(questionId);
         questionMapper.deleteByPrimaryKey(questionId);
+        questionTagMapper.deleteBYQID(questionId);
+        questionEditMapper.deleteBYQId(questionId);
+        easyRedis.delete("RecommendQuestion");
+        easyRedis.delete("");
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteQuestionByUId(Integer userId) throws Exception {
+        if (userId==null){
+            throw new Exception("问题或用户id为空");
+        }
+        log.info("删除问题操作---操作者id:"+userId);
+        /**
+         *未完成
+         */
+    }
+
 
     /**
      * 根据问题浏览量信息查询问题信息

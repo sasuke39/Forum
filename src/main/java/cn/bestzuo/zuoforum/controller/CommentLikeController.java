@@ -1,6 +1,7 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.Comment;
 import cn.bestzuo.zuoforum.pojo.CommentLike;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
@@ -65,9 +66,16 @@ public class CommentLikeController {
 
         if (commentId == null || questionId == null) return new ForumResult(400, "输入数据不能为空", null);
         //点赞者
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);
+        UserInfo userInfo = null;
         //被点赞者
-        UserInfo userInfo1 = userInfoService.getUserInfoByName(commentUsername);
+        UserInfo userInfo1 =null;
+        try {
+             userInfo = userInfoService.getUserInfoByName(username);
+            //被点赞者
+             userInfo1 = userInfoService.getUserInfoByName(commentUsername);
+        }catch (BusinessException businessException){
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+        }
         if (userInfo == null || userInfo1 == null) return new ForumResult(400, "用户不存在", null);
         Comment comment = commentService.selectCommentByPrimaryKey(commentId);
         if (comment == null) return new ForumResult(400, "评论信息不存在", null);
@@ -100,10 +108,16 @@ public class CommentLikeController {
         }
 
         //点赞者
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);
-
+        UserInfo userInfo = null;
         //被点赞者
-        UserInfo userInfo1 = userInfoService.getUserInfoByName(commentUsername);
+        UserInfo userInfo1 =null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(username);
+            //被点赞者
+            userInfo1 = userInfoService.getUserInfoByName(commentUsername);
+        }catch (BusinessException businessException){
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+        }
 
         if (userInfo == null || userInfo1 == null) {
             return new ForumResult(400, "用户不存在", null);

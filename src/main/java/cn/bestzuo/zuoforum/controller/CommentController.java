@@ -2,6 +2,7 @@ package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.common.LayuiFlowResult;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.Comment;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
@@ -66,7 +67,12 @@ public class CommentController {
         }
 
         //判断user信息
-        UserInfo userInfo = userInfoService.getUserInfoByName(username);
+        UserInfo userInfo = null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+        }
         if (userInfo == null)
             return new ForumResult(500, "用户信息不存在", null);
 
@@ -126,7 +132,12 @@ public class CommentController {
         vo.setTime(comment.getTime());
         vo.setComment(comment.getComment());
 
-        UserInfo info = userInfoService.getUserInfoByName(comment.getUname());
+        UserInfo info = null;
+        try {
+            info = userInfoService.getUserInfoByName(comment.getUname());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         //获取评论者的头像信息
         vo.setAvatar(info.getAvatar());
 

@@ -4,25 +4,23 @@ import cn.bestzuo.zuoforum.admin.common.LayuiTableResult;
 import cn.bestzuo.zuoforum.admin.controller.VO.UserInfoVO;
 import cn.bestzuo.zuoforum.admin.utils.IpUtil;
 import cn.bestzuo.zuoforum.common.ForumResult;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
+import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import cn.bestzuo.zuoforum.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +46,9 @@ public class AdminUserInfoController {
 
     @Autowired
     PlatformTransactionManager transactionManager;
+
+    @Autowired
+    QuestionService questionService;
 
     /**
      * 查询所有用户信息
@@ -84,7 +85,12 @@ public class AdminUserInfoController {
             } else {
                 //搜索的是用户名，只会存在一条用户名
                 List<UserInfo> userInfos = new ArrayList<>();
-                UserInfo info = userInfoService.getUserInfoByName(username);
+                UserInfo info = null;
+                try {
+                    info = userInfoService.getUserInfoByName(username);
+                } catch (BusinessException businessException) {
+                    return new LayuiTableResult(businessException.getErrorCode(),businessException.getErrorMsg(),0,null);
+                }
                 if (info == null) {
                     return new LayuiTableResult(1, "查询成功", 0, null);
                 }
@@ -170,6 +176,7 @@ public class AdminUserInfoController {
                 // TODO something
                 userService.deleteUserById(id);
                 userInfoService.deleteUserInfoByUid(id);
+//                questionService.deleteQuestion();
             } catch (Exception e) {
                 //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //手动开启事务回滚
                 status.setRollbackOnly();

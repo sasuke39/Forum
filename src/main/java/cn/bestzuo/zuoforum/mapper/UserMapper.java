@@ -52,4 +52,10 @@ public interface UserMapper {
      * @return
      */
     User getUserByUserId(Integer userId);
+
+
+    void updateUsername(String username,Integer uid);
+
+    String getPassword(Integer id);
+
 }

@@ -28,4 +28,7 @@
         SELECT DISTINCT question_id from tb_question_tag where tag_id = #{tagId} ORDER BY question_id DESC
     </select>
 
+    <delete id="deleteBYQID" parameterType="java.lang.Integer">
+        DELETE FROM tb_question_tag where question_id=#{questionId}
+    </delete>
 </mapper>

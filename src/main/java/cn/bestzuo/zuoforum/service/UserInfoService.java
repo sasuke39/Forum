@@ -1,7 +1,10 @@
 package cn.bestzuo.zuoforum.service;
 
+
+
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
-import cn.bestzuo.zuoforum.pojo.UserRate;
+
 
 import java.util.List;
 
@@ -23,7 +26,7 @@ public interface UserInfoService {
     /**
      * 根据用户名获取用户信息
      */
-    UserInfo getUserInfoByName(String username);
+    UserInfo getUserInfoByName(String username) throws BusinessException;
 
     /**
      * 修改用户头像

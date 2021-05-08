@@ -72,4 +72,6 @@ public interface QuestionEditMapper {
      * @return
      */
     Integer queryIsDingByQuestionId(Integer questionId);
+
+    void deleteBYQId(Integer questionId);
 }

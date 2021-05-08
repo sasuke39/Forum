@@ -2,6 +2,7 @@ package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.common.LayuiFlowResult;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.*;
 import cn.bestzuo.zuoforum.pojo.vo.*;
 import cn.bestzuo.zuoforum.service.*;
@@ -134,7 +135,12 @@ public class NoticeController {
         commentNoticeVO.setId(commentNoticeInfo.getId());
 
         //获取回复者头像
-        UserInfo info = userInfoService.getUserInfoByName(commentNoticeInfo.getCommentName());
+        UserInfo info = null;
+        try {
+            info = userInfoService.getUserInfoByName(commentNoticeInfo.getCommentName());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         commentNoticeVO.setCommentAvatar(info.getAvatar());
         commentNoticeVO.setParentCommentId(commentNoticeInfo.getParentCommentId());
         commentNoticeVO.setUsername(commentNoticeInfo.getCommentName());
@@ -184,11 +190,16 @@ public class NoticeController {
      * @param collection
      * @return
      */
-    private CollectionNoticeVO convertCollectionNoticeToVO(Collection collection) {
+    private CollectionNoticeVO convertCollectionNoticeToVO(Collection collection)  {
         CollectionNoticeVO vo = new CollectionNoticeVO();
         vo.setId(collection.getId());
         //获取收藏者的用户信息（头像地址）
-        UserInfo userInfo = userInfoService.getUserInfoByName(collection.getUsername());
+        UserInfo userInfo = null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(collection.getUsername());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         vo.setAvatar(userInfo.getAvatar());
         vo.setUId(userInfo.getUId());
 
@@ -241,7 +252,12 @@ public class NoticeController {
         vo.setId(follow.getId());
         vo.setUsername(follow.getFollowName());
 
-        UserInfo info = userInfoService.getUserInfoByName(follow.getFollowName());
+        UserInfo info = null;
+        try {
+            info = userInfoService.getUserInfoByName(follow.getFollowName());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         vo.setUid(info.getUId());
         vo.setTime(follow.getTime());
         vo.setAvatar(info.getAvatar());
@@ -285,7 +301,12 @@ public class NoticeController {
         vo.setUsername(commentLike.getLikeName());
         vo.setUid(commentLike.getLikeId());
 
-        UserInfo info = userInfoService.getUserInfoByName(commentLike.getLikeName());
+        UserInfo info = null;
+        try {
+            info = userInfoService.getUserInfoByName(commentLike.getLikeName());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         vo.setAvatar(info.getAvatar());
 
         vo.setQuestionId(commentLike.getQuestionId());

@@ -1,6 +1,7 @@
 package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.Follow;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
 import cn.bestzuo.zuoforum.service.FollowService;
@@ -43,8 +44,15 @@ public class FollowController {
             return new ForumResult(400, "用户名不能为空", null);
         }
 
-        UserInfo userInfo = userInfoService.getUserInfoByName(userName);
-        UserInfo userInfo1 = userInfoService.getUserInfoByName(followName);
+        UserInfo userInfo = null;
+        UserInfo userInfo1= null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(userName);
+             userInfo1 = userInfoService.getUserInfoByName(followName);
+
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(), businessException.getErrorMsg(), null);
+        }
         if (userInfo == null || userInfo1 == null) {
             return new ForumResult(400, "用户名不存在", null);
         }
@@ -78,8 +86,15 @@ public class FollowController {
             return new ForumResult(300, "您不能关注自己哦", null);
         }
 
-        UserInfo userInfo = userInfoService.getUserInfoByName(userName);
-        UserInfo userInfo1 = userInfoService.getUserInfoByName(followName);
+        UserInfo userInfo = null;
+        UserInfo userInfo1= null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(userName);
+            userInfo1 = userInfoService.getUserInfoByName(followName);
+
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(), businessException.getErrorMsg(), null);
+        }
         if (userInfo == null || userInfo1 == null) {
             return new ForumResult(400, "用户名不存在", null);
         }
@@ -136,9 +151,15 @@ public class FollowController {
         if (userName.trim().equals(followName)) {
             return new ForumResult(300, "您不能关注自己哦", null);
         }
+        UserInfo userInfo = null;
+        UserInfo userInfo1= null;
+        try {
+            userInfo = userInfoService.getUserInfoByName(userName);
+            userInfo1 = userInfoService.getUserInfoByName(followName);
 
-        UserInfo userInfo = userInfoService.getUserInfoByName(userName);
-        UserInfo userInfo1 = userInfoService.getUserInfoByName(followName);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(), businessException.getErrorMsg(), null);
+        }
         if (userInfo == null || userInfo1 == null) {
             return new ForumResult(400, "用户名不存在", null);
         }

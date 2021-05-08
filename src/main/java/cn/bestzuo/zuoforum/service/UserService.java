@@ -20,6 +20,7 @@ public interface UserService {
      */
     int insertUser(String username, String password);
 
+
     /**
      * 根据用户名获取用户信息
      * @param username 用户名

@@ -1,5 +1,6 @@
 package cn.bestzuo.zuoforum.controller;
 
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.Question;
 import cn.bestzuo.zuoforum.pojo.QuestionEdit;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
@@ -7,11 +8,13 @@ import cn.bestzuo.zuoforum.pojo.vo.QuestionVO;
 import cn.bestzuo.zuoforum.service.QuestionService;
 import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.service.TagService;
+
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,10 +50,15 @@ public class QuestionController {
         PageHelper.startPage(currPage, pageSize);
         List<Question> questions = questionService.queryAllQuestionsWithCurrPage(currPage);
         List<QuestionVO> res = new ArrayList<>();
-        for (Question ques : questions) {
+        try {
+            for (Question ques : questions) {
             QuestionVO vo = convertQuestionToVO(ques);
             res.add(vo);
         }
+        }catch (BusinessException businessException){
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+        }
+
         PageInfo<QuestionVO> pageInfo = new PageInfo<>(res);
         if (questions.size() != 0) {
             return new ForumResult(200, "查询成功!", pageInfo.getList());
@@ -60,6 +68,7 @@ public class QuestionController {
 
     /**
      * 推荐
+     *
      * @param currPage
      * @param pageSize
      * @return
@@ -67,13 +76,17 @@ public class QuestionController {
     @GetMapping("/getAllQuestionsByViewCount")
     @ResponseBody
     public ForumResult getAllQuestionsByViewCount(@RequestParam(defaultValue = "1", value = "currPage") Integer currPage,
-                                                  @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize){
+                                                  @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
         PageHelper.startPage(currPage, pageSize);
         List<Question> questions = questionService.getAllQuestionsByViewCount();
         List<QuestionVO> res = new ArrayList<>();
-        for (Question ques : questions) {
-            QuestionVO vo = convertQuestionToVO(ques);
-            res.add(vo);
+        try {
+            for (Question ques : questions) {
+                QuestionVO vo = convertQuestionToVO(ques);
+                res.add(vo);
+            }
+        }catch (BusinessException businessException){
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
         }
         PageInfo<QuestionVO> pageInfo = new PageInfo<>(res);
         if (questions.size() != 0) {
@@ -84,6 +97,7 @@ public class QuestionController {
 
     /**
      * 最热
+     *
      * @param currPage
      * @param pageSize
      * @return
@@ -91,13 +105,17 @@ public class QuestionController {
     @GetMapping("/getAllQuestionsByCommentCount")
     @ResponseBody
     public ForumResult getAllQuestionsByCommentCount(@RequestParam(defaultValue = "1", value = "currPage") Integer currPage,
-                                                  @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize){
+                                                     @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
         PageHelper.startPage(currPage, pageSize);
         List<Question> questions = questionService.getAllQuestionsByCommentCount();
         List<QuestionVO> res = new ArrayList<>();
-        for (Question ques : questions) {
-            QuestionVO vo = convertQuestionToVO(ques);
-            res.add(vo);
+        try {
+            for (Question ques : questions) {
+                QuestionVO vo = convertQuestionToVO(ques);
+                res.add(vo);
+            }
+        }catch (BusinessException businessException){
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
         }
         PageInfo<QuestionVO> pageInfo = new PageInfo<>(res);
         if (questions.size() != 0) {
@@ -108,6 +126,7 @@ public class QuestionController {
 
     /**
      * 消灭0回复
+     *
      * @param currPage
      * @param pageSize
      * @return
@@ -115,13 +134,17 @@ public class QuestionController {
     @GetMapping("/getAllQuestionsByZeroComment")
     @ResponseBody
     public ForumResult getAllQuestionsByZeroComment(@RequestParam(defaultValue = "1", value = "currPage") Integer currPage,
-                                                     @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize){
+                                                    @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
         PageHelper.startPage(currPage, pageSize);
         List<Question> questions = questionService.getAllQuestionsByZeroComment();
         List<QuestionVO> res = new ArrayList<>();
-        for (Question ques : questions) {
-            QuestionVO vo = convertQuestionToVO(ques);
-            res.add(vo);
+        try {
+            for (Question ques : questions) {
+                QuestionVO vo = convertQuestionToVO(ques);
+                res.add(vo);
+            }
+        }catch (BusinessException businessException){
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
         }
         PageInfo<QuestionVO> pageInfo = new PageInfo<>(res);
         if (questions.size() != 0) {
@@ -132,6 +155,7 @@ public class QuestionController {
 
     /**
      * 获取所有精品帖子
+     *
      * @param currPage
      * @param pageSize
      * @return
@@ -139,19 +163,32 @@ public class QuestionController {
     @RequestMapping("/getAllJingQuestions")
     @ResponseBody
     public ForumResult getAllJingQuestions(@RequestParam(defaultValue = "1", value = "currPage") Integer currPage,
-                                           @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize){
+                                           @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
         PageHelper.startPage(currPage, pageSize);
         List<Question> questions = questionService.getAllJingQuestions();
         List<QuestionVO> res = new ArrayList<>();
-        for (Question ques : questions) {
-            QuestionVO vo = convertQuestionToVO(ques);
-            res.add(vo);
+        ForumResult forumResult =new ForumResult();
+        try {
+            for (Question ques : questions) {
+                QuestionVO vo = convertQuestionToVO(ques);
+                res.add(vo);
+            }
+            PageInfo<QuestionVO> pageInfo = new PageInfo<>(res);
+            if (questions.size() != 0) {
+                forumResult.setStatus(200);
+                forumResult.setMsg("查询成功");
+                forumResult.setData(pageInfo.getList());
+                return forumResult;
+            }
+        }catch (BusinessException businessException){
+            forumResult.setStatus(businessException.getErrorCode());
+            forumResult.setMsg(businessException.getErrorMsg());
+            return forumResult;
         }
-        PageInfo<QuestionVO> pageInfo = new PageInfo<>(res);
-        if (questions.size() != 0) {
-            return new ForumResult(200, "查询成功!", pageInfo.getList());
-        }
-        return new ForumResult(500, "问题数量为零", null);
+        forumResult.setStatus(500);
+        forumResult.setMsg("问题数量为零");
+
+        return forumResult;
     }
 
 
@@ -161,7 +198,7 @@ public class QuestionController {
      * @param question 表单数据
      * @return
      */
-    private QuestionVO convertQuestionToVO(Question question) {
+    private QuestionVO convertQuestionToVO(Question question) throws BusinessException{
         QuestionVO vo = new QuestionVO();
 
         vo.setId(question.getId());
@@ -170,10 +207,10 @@ public class QuestionController {
 
         //获取展示的标签信息
         String tags = question.getTag();
-        if(tags.contains(",")){
+        if (tags.contains(",")) {
             //说明有多个标签，默认展示第一个标签
             vo.setTag(tags.split(",")[0]);
-        }else {
+        } else {
             //说明只有一个标签
             vo.setTag(tags);
         }
@@ -185,61 +222,84 @@ public class QuestionController {
         vo.setGmtCreate(question.getGmtCreate());
         vo.setGmtModified(question.getGmtModified());
 
-        UserInfo info = userInfoService.getUserInfoByName(question.getPublisher());
-        vo.setAvatar(info.getAvatar());
-        vo.setUid(info.getUId());
+            UserInfo info = userInfoService.getUserInfoByName(question.getPublisher());
 
-        //查询问题的置顶和加精情况
-        QuestionEdit questionEdit = questionService.queryQuestionEditInfoByQuestionId(question.getId());
-        if(questionEdit == null){
-            vo.setIsDing(0);
-            vo.setIsJing(0);
-        }else{
-            vo.setIsDing(questionEdit.getIsDing());
-            vo.setIsJing(questionEdit.getIsJing());
-        }
+            vo.setAvatar(info.getAvatar());
+            vo.setUid(info.getUId());
+
+            //查询问题的置顶和加精情况
+            QuestionEdit questionEdit = questionService.queryQuestionEditInfoByQuestionId(question.getId());
+            if (questionEdit == null) {
+                vo.setIsDing(0);
+                vo.setIsJing(0);
+            } else {
+                vo.setIsDing(questionEdit.getIsDing());
+                vo.setIsJing(questionEdit.getIsJing());
+            }
+
+
 
         return vo;
     }
 
     /**
      * 查询数据库中条数
+     *
      * @return
      */
     @GetMapping("/getTotalCount")
     @ResponseBody
-    public ForumResult getTotalCount(){
+    public ForumResult getTotalCount() {
         List<Question> list = questionService.queryAllQuestions();
-        return new ForumResult(200,"查询成功",list.size());
+        return new ForumResult(200, "查询成功", list.size());
     }
 
     /**
      * 获取精品帖的条数
+     *
      * @return
      */
     @GetMapping("/getJingCount")
     @ResponseBody
-    public ForumResult getJingCount(){
+    public ForumResult getJingCount() {
         List<Question> allJingQuestions = questionService.getAllJingQuestions();
-        return new ForumResult(200,"查询成功",allJingQuestions.size());
+        return new ForumResult(200, "查询成功", allJingQuestions.size());
     }
 
     /**
      * 根据问题ID查询问题的标签
+     *
      * @return
      */
     @RequestMapping("/getQuestionTags")
     @ResponseBody
-    public ForumResult getTags(@RequestParam("questionId") Integer questionId){
+    public ForumResult getTags(@RequestParam("questionId") Integer questionId) {
         //后端校验
-        if(questionId == null){
-            return new ForumResult(400,"",null);
+        if (questionId == null) {
+            return new ForumResult(400, "", null);
         }
 
         String s = questionService.queryTagByQuestionId(questionId);
-        if(s == null){
-            return new ForumResult(200,"",null);
+        if (s == null) {
+            return new ForumResult(200, "", null);
         }
-        return new ForumResult(200,"",s);
+        return new ForumResult(200, "", s);
+    }
+
+    /**
+     * 问题删除
+     */
+    @RequestMapping("/deleteQuestionByQId")
+    @ResponseBody
+    public ForumResult deleteQuestion(@RequestParam("questionId") Integer questionId){
+        if (questionId==null){
+            return new ForumResult(400, "id为空", null);
+        }
+        try {
+            questionService.deleteQuestion(questionId,0);
+        } catch (Exception e) {
+            return new ForumResult(501, e.getMessage(), null);
+        }
+          return new ForumResult(200, "", null);
     }
 }

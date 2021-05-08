@@ -21,6 +21,9 @@
     <select id="queryIsJingByQuestionId" parameterType="int" resultType="java.lang.Integer">
         select is_jing from tb_question_edit where question_id = #{questionId}
     </select>
+    <delete id="deleteBYQId" parameterType="int">
+        delete from tb_question_edit where question_id=#{questionId}
+    </delete>
 
     <!--查询置顶状态-->
     <select id="queryIsDingByQuestionId" parameterType="int" resultType="java.lang.Integer">

@@ -2,6 +2,7 @@ package cn.bestzuo.zuoforum.controller;
 
 import cn.bestzuo.zuoforum.common.ForumResult;
 import cn.bestzuo.zuoforum.common.LayuiFlowResult;
+import cn.bestzuo.zuoforum.exception.BusinessException;
 import cn.bestzuo.zuoforum.pojo.*;
 import cn.bestzuo.zuoforum.pojo.vo.*;
 import cn.bestzuo.zuoforum.service.*;
@@ -108,7 +109,12 @@ public class UserIndexController {
         }
 
         //后台查询数据库信息
-        UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
+        UserInfo userInfoByName = null;
+        try {
+            userInfoByName = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+        }
         if (userInfoByName == null) {
             return new ForumResult(400, "用户不存在", null);
         }
@@ -161,7 +167,13 @@ public class UserIndexController {
         }
 
         //后台查询数据库信息
-        UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
+        UserInfo userInfoByName = null;
+        try {
+            userInfoByName = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new LayuiFlowResult(businessException.getErrorCode(),businessException.getErrorMsg(),null,0);
+
+        }
         if (userInfoByName == null) {
             return new LayuiFlowResult(400, "用户不存在", null,0);
         }
@@ -253,7 +265,13 @@ public class UserIndexController {
             return new LayuiFlowResult(400, "用户未登录", null,0);
         }
 
-        UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
+        UserInfo userInfoByName = null;
+        try {
+            userInfoByName = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new LayuiFlowResult(businessException.getErrorCode(),businessException.getErrorMsg(),null,0);
+
+        }
         if (userInfoByName == null) {
             return new LayuiFlowResult(400, "用户信息不存在", null,0);
         }
@@ -331,7 +349,13 @@ public class UserIndexController {
             return new LayuiFlowResult(400, "用户未登录", null,0);
         }
 
-        UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
+        UserInfo userInfoByName = null;
+        try {
+            userInfoByName = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new LayuiFlowResult(businessException.getErrorCode(),businessException.getErrorMsg(),null,0);
+
+        }
         if (userInfoByName == null) {
             return new LayuiFlowResult(400, "用户信息不存在", null,0);
         }
@@ -368,7 +392,13 @@ public class UserIndexController {
             return new LayuiFlowResult(400, "用户未登录", null,0);
         }
 
-        UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
+        UserInfo userInfoByName = null;
+        try {
+            userInfoByName = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new LayuiFlowResult(businessException.getErrorCode(),businessException.getErrorMsg(),null,0);
+
+        }
         if (userInfoByName == null) {
             return new LayuiFlowResult(400, "用户信息不存在", null,0);
         }
@@ -413,7 +443,13 @@ public class UserIndexController {
             return new ForumResult(400, "用户未登录", null);
         }
 
-        UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
+        UserInfo userInfoByName = null;
+        try {
+            userInfoByName = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+
+        }
         if (userInfoByName == null) {
             return new ForumResult(400, "用户信息不存在", null);
         }
@@ -443,7 +479,12 @@ public class UserIndexController {
         vo.setUsername(follow.getUserName());
 
         //头像
-        UserInfo info = userInfoService.getUserInfoByName(follow.getUserName());
+        UserInfo info = null;
+        try {
+            info = userInfoService.getUserInfoByName(follow.getUserName());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         vo.setAvatar(info.getAvatar());
 
         //工作/学校信息
@@ -498,7 +539,13 @@ public class UserIndexController {
             return new ForumResult(400, "用户未登录", null);
         }
 
-        UserInfo userInfoByName = userInfoService.getUserInfoByName(username);
+        UserInfo userInfoByName = null;
+        try {
+            userInfoByName = userInfoService.getUserInfoByName(username);
+        } catch (BusinessException businessException) {
+            return new ForumResult(businessException.getErrorCode(),businessException.getErrorMsg(),null);
+
+        }
         if (userInfoByName == null) {
             return new ForumResult(400, "用户信息不存在", null);
         }
@@ -528,7 +575,12 @@ public class UserIndexController {
         vo.setUsername(follow.getFollowName());
 
         //头像
-        UserInfo info = userInfoService.getUserInfoByName(follow.getFollowName());
+        UserInfo info = null;
+        try {
+            info = userInfoService.getUserInfoByName(follow.getFollowName());
+        } catch (BusinessException businessException) {
+            businessException.printStackTrace();
+        }
         vo.setAvatar(info.getAvatar());
 
         //工作/学校信息

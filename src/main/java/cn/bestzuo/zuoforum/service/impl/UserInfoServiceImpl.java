@@ -1,12 +1,17 @@
 package cn.bestzuo.zuoforum.service.impl;
 
+import cn.bestzuo.zuoforum.exception.BusinessException;
+import cn.bestzuo.zuoforum.exception.EmBusinessError;
 import cn.bestzuo.zuoforum.mapper.EmailMapper;
 import cn.bestzuo.zuoforum.mapper.UserInfoMapper;
+import cn.bestzuo.zuoforum.mapper.UserMapper;
 import cn.bestzuo.zuoforum.pojo.UserInfo;
+
 import cn.bestzuo.zuoforum.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
@@ -22,6 +27,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Autowired
     private EmailMapper emailMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 查询所有用户信息
@@ -48,8 +55,12 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return  用户信息
      */
     @Override
-    public UserInfo getUserInfoByName(String username) {
-        return userInfoMapper.selectUserInfoByName(username);
+    public UserInfo getUserInfoByName(String username) throws BusinessException {
+        UserInfo userInfo = userInfoMapper.selectUserInfoByName(username);
+         if(ObjectUtils.isEmpty(userInfo)) {
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+        }
+         return userInfo;
     }
 
     /**
@@ -83,7 +94,9 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Transactional
     public void updateUserInfoByUid(UserInfo userInfo) {
         //可以不修改邮箱信息
+
         userInfoMapper.updateByUidSelective(userInfo);
+        userMapper.updateUsername(userInfo.getUsername(),userInfo.getUId());
     }
 
     /**
