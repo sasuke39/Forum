@@ -165,15 +165,17 @@
         </div>
     </div>
 </div>
+
 <script th:inline="javascript">
     let totalCount = 0;
     let jingCount = 0;
     let localToken =localStorage.getItem("token");
     // let loginUserInfo = [[${session.loginUserInfo}]];
-
+    $('#token_hidden').val("")
     //初始化信息
     // init(loginUserInfo);
     let loginUserInfo=init(localToken);
+
 
     layui.use(['element', 'carousel', 'laypage', 'layer'], function () {
         let element = layui.element;

@@ -229,6 +229,7 @@ public class UserLoginAndRegisterController {
         //储存UserToken
         log.info("用户:"+username+"登陆，新增token:"+token);
         session.setAttribute("token",token);
+
         forumResult.setData(token);
         forumResult.setStatus(200);
         return forumResult;

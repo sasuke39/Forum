@@ -3,6 +3,7 @@ package cn.bestzuo.zuoforum.config;
 import cn.bestzuo.zuoforum.admin.listener.MyHttpSessionListener;
 import cn.bestzuo.zuoforum.config.interceptors.AdminLoginInterceptor;
 import cn.bestzuo.zuoforum.config.interceptors.LoginInterceptor;
+import cn.bestzuo.zuoforum.config.interceptors.SetHeaderInterceptor;
 import cn.bestzuo.zuoforum.config.interceptors.WordsInterceptor;
 import cn.bestzuo.zuoforum.util.WordsFilterUtils;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
@@ -27,6 +28,9 @@ public class WebConfig implements WebMvcConfigurer {
     private AdminLoginInterceptor adminLoginInterceptor;
     @Autowired
     private WordsInterceptor wordsInterceptor;
+
+    @Autowired
+    private SetHeaderInterceptor setHeaderInterceptor;
     @Bean
     public ServletListenerRegistrationBean listenerRegist() {
         ServletListenerRegistrationBean srb = new ServletListenerRegistrationBean();
@@ -46,8 +50,9 @@ public class WebConfig implements WebMvcConfigurer {
         // addPathPatterns("/**") 表示拦截所有的请求，
         // excludePathPatterns("/login", "/register") 表示除了登陆与注册之外，因为登陆注册不需要登陆也可以访问
 //        registry.addInterceptor(wordsInterceptor).addPathPatterns("/**");
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/user/*", "/safe", "/notice", "/publish", "/logout","/notice/*","/myfollow").
-                excludePathPatterns("/", "/index","/java","/question/**", "/search", "/login", "/register", "/static/**","/404.html");
+//        registry.addInterceptor(setHeaderInterceptor).addPathPatterns("/**").excludePathPatterns("/login");
+//        registry.addInterceptor(loginInterceptor).addPathPatterns("/user/*", "/safe", "/notice", "/publish", "/logout","/notice/*","/myfollow").
+//                excludePathPatterns("/", "/index","/java","/question/**", "/search", "/login", "/register", "/static/**","/404.html");
 
         registry.addInterceptor(adminLoginInterceptor).addPathPatterns("/admin").
                 excludePathPatterns("/admin/login");

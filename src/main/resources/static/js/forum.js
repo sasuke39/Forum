@@ -68,6 +68,7 @@ function init(localToken) {
     let loginUserInfo="";
     let username="";
     let uid="";
+
     if (localToken!==undefined&&localToken!==null){
         $.ajax({
             type: "post",
